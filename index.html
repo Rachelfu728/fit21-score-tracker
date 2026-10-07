@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Fit21 每日健康習慣打卡表</title>
+  <!-- 支援 GitHub Pages 與手機瀏覽器載入的官方 Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    input[type=range] {
+      accent-color: #10B981;
+    }
+    .tap-target {
+      touch-action: manipulation;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen py-6 px-3 sm:px-6 antialiased font-sans">
+  <div class="max-w-xl mx-auto space-y-5">
+    
+    <!-- 頂部 Header -->
+    <header class="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-5 text-white shadow-lg relative overflow-hidden">
+      <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+      <div class="flex items-center justify-between mb-2">
+        <span class="inline-block bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase">
+          FIT21 CHALLENGE
+        </span>
+        <span id="score-badge" class="bg-amber-400 text-slate-900 font-extrabold text-sm px-3 py-1 rounded-full shadow-sm">
+          自律總分：<span id="badge-total">100</span> / 100 分
+        </span>
+      </div>
+      <h1 class="text-2xl font-black tracking-tight mb-1">Fit21 每日健康蛻變打卡表</h1>
+      <p class="text-xs sm:text-sm text-emerald-100">8大自律項目滿分 100 分，一鍵複製發送給專屬教練！</p>
+    </header>
+
+    <!-- 基本資料卡片 -->
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm grid grid-cols-2 gap-3">
+      <div>
+        <label for="input-date" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">📅 打卡日期</label>
+        <input type="date" id="input-date" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium">
+      </div>
+      <div>
+        <label for="input-name" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">👤 學員姓名</label>
+        <input type="text" id="input-name" placeholder="請輸入姓名/暱稱" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium">
+      </div>
+    </div>
+
+    <!-- 計分項目表單 (8大自律共 100 分) -->
+    <main class="space-y-3" id="items-container">
+      <!-- 8大項目由 JS 動態生成 -->
+    </main>
+
+    <!-- 心情評分卡 (1-5分) -->
+    <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center space-x-2">
+          <span class="text-xl">🥳</span>
+          <span class="font-bold text-sm sm:text-base">心情分數</span>
+        </div>
+        <span class="text-xs bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 font-bold px-2 py-0.5 rounded-full">
+          1 - 5 分
+        </span>
+      </div>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">今天的心情與身心整體狀態如何呢？</p>
+      
+      <div class="grid grid-cols-5 gap-1.5 sm:gap-2" id="mood-selector">
+        <button type="button" data-score="1" class="mood-btn tap-target p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-center hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex flex-col items-center">
+          <span class="text-xl mb-1">😫</span>
+          <span class="text-xs font-semibold">1分</span>
+          <span class="text-[10px] text-slate-400">低落</span>
+        </button>
+        <button type="button" data-score="2" class="mood-btn tap-target p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-center hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex flex-col items-center">
+          <span class="text-xl mb-1">😐</span>
+          <span class="text-xs font-semibold">2分</span>
+          <span class="text-[10px] text-slate-400">一般</span>
+        </button>
+        <button type="button" data-score="3" class="mood-btn tap-target p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-center hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex flex-col items-center">
+          <span class="text-xl mb-1">🙂</span>
+          <span class="text-xs font-semibold">3分</span>
+          <span class="text-[10px] text-slate-400">良好</span>
+        </button>
+        <button type="button" data-score="4" class="mood-btn tap-target p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-center hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex flex-col items-center">
+          <span class="text-xl mb-1">😊</span>
+          <span class="text-xs font-semibold">4分</span>
+          <span class="text-[10px] text-slate-400">愉快</span>
+        </button>
+        <button type="button" data-score="5" class="mood-btn tap-target p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-center hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex flex-col items-center">
+          <span class="text-xl mb-1">🥳</span>
+          <span class="text-xs font-semibold">5分</span>
+          <span class="text-[10px] text-slate-400">極佳</span>
+        </button>
+      </div>
+      <input type="hidden" id="input-mood" value="5">
+    </section>
+
+    <!-- 心得/想對教練說的話 (選填) -->
+    <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
+      <label for="input-note" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">💬 今日心得 / 想對教練說的話（選填）</label>
+      <textarea id="input-note" rows="2" placeholder="例：今天喝足3000cc水，深蹲做完爆汗超有成就感！" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+    </section>
+
+    <!-- 總分結算卡片 (100分滿分制) -->
+    <div class="bg-slate-900 text-white rounded-2xl p-5 shadow-xl space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs text-slate-400 uppercase tracking-widest font-bold">8大自律總分</span>
+          <div class="text-3xl sm:text-4xl font-black text-emerald-400 flex items-baseline gap-1">
+            <span id="final-total">100</span>
+            <span class="text-sm font-normal text-slate-400">/ 100 分</span>
+          </div>
+        </div>
+        <div class="text-right">
+          <div id="grade-badge" class="inline-block px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-xl text-xs font-bold">
+            🔥 超越極限・完美自律
+          </div>
+          <div class="text-[11px] text-slate-400 mt-1">自律達成率：<span id="percentage">100%</span></div>
+        </div>
+      </div>
+
+      <!-- 進度條 -->
+      <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+        <div id="progress-bar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-full transition-all duration-300"></div>
+      </div>
+
+      <!-- 操作按鈕群 -->
+      <div class="flex flex-col sm:flex-row gap-2 pt-1">
+        <button id="btn-copy" type="button" class="tap-target flex-1 bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all flex items-center justify-center space-x-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+          </svg>
+          <span class="text-sm sm:text-base">📋 一鍵複製回報給教練</span>
+        </button>
+        <button id="btn-reset" type="button" class="tap-target bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-3 px-4 rounded-xl transition-all text-xs flex items-center justify-center">
+          ↺ 重設填寫
+        </button>
+      </div>
+    </div>
+
+    <!-- 即時預覽文字框 -->
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-bold text-slate-500 dark:text-slate-400">📄 複製預覽（將傳送以下格式內容）</span>
+        <button id="btn-quick-copy" type="button" class="text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-semibold">快速複製</button>
+      </div>
+      <pre id="preview-text" class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl text-xs font-mono text-slate-700 dark:text-slate-300 whitespace-pre-wrap select-all border border-slate-100 dark:border-slate-800"></pre>
+    </div>
+
+    <!-- 底部說明 -->
+    <footer class="text-center text-xs text-slate-400 pb-8 space-y-1">
+      <p>Fit21 養成健康自律好習慣 • 21天蛻變之旅</p>
+      <p class="text-[11px] text-slate-500">每天堅持一小步，遇見更棒的自己！</p>
+    </footer>
+
+  </div>
+
+  <!-- Toast 成功通知 -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white backdrop-blur-md px-5 py-3 rounded-2xl shadow-2xl flex items-center space-x-2 text-sm font-semibold opacity-0 pointer-events-none transition-all duration-300 translate-y-3 z-50 border border-slate-700">
+    <span class="text-emerald-400 text-lg">✓</span>
+    <span id="toast-message">已複製到剪貼簿！可直接傳給教練</span>
+  </div>
+
+  <script>
+    // 8大自律項目配分總計剛好 100 分 (20+15+15+10+15+10+5+10 = 100)
+    const ITEMS_CONFIG = [
+      { id: 'diet', icon: '🥗', name: '飲食', max: 20, defaultVal: 20, hint: '均衡少油、未加工原型食物為原則' },
+      { id: 'protein', icon: '🥩', name: '蛋白質', max: 15, defaultVal: 15, hint: '每餐充足優質蛋白 (肉/蛋/豆/海鮮)' },
+      { id: 'water', icon: '💧', name: '水量', max: 15, defaultVal: 15, hint: '喝足體重×30~40cc每日水分' },
+      { id: 'veggies', icon: '🥦', name: '蔬菜水果', max: 10, defaultVal: 10, hint: '餐餐有蔬菜、彩虹多樣化攝取' },
+      { id: 'workout', icon: '🏃‍♀️', name: '運動', max: 15, defaultVal: 15, hint: '重訓/有氧/伸展，完成今日運動' },
+      { id: 'snack', icon: '🍪', name: '零食飲料', max: 10, defaultVal: 10, hint: '完全不碰加工零嘴含糖飲滿分10分' },
+      { id: 'sleep', icon: '😴', name: '睡眠', max: 5, defaultVal: 5, hint: '睡滿7~8小時、深層好眠' },
+      { id: 'checkin', icon: '📱', name: '每日回報', max: 10, defaultVal: 10, hint: '準時拍照打卡回傳飲食與飲水' }
+    ];
+
+    const moodNames = {
+      1: '😫 疲憊低落',
+      2: '😐 普普通通',
+      3: '🙂 狀態良好',
+      4: '😊 充實愉快',
+      5: '🥳 超級棒！'
+    };
+
+    // 初始化日期
+    const dateInput = document.getElementById('input-date');
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    dateInput.value = `${year}-${month}-${day}`;
+
+    // 渲染 8 大項目
+    const container = document.getElementById('items-container');
+    container.innerHTML = ITEMS_CONFIG.map(item => `
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm hover:border-emerald-200 dark:hover:border-emerald-800/40 transition-all">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="flex items-center space-x-2">
+            <span class="text-xl">${item.icon}</span>
+            <span class="font-bold text-sm sm:text-base">${item.name}</span>
+          </div>
+          <div class="flex items-center space-x-1.5">
+            <span class="text-xs text-slate-400">最高 ${item.max} 分</span>
+            <span class="font-black text-emerald-600 dark:text-emerald-400 text-lg w-8 text-right" id="val-display-${item.id}">${item.defaultVal}</span>
+            <span class="text-xs text-slate-400">分</span>
+          </div>
+        </div>
+        
+        <p class="text-[11px] text-slate-400 dark:text-slate-500 mb-2.5">${item.hint}</p>
+
+        <!-- 快速調整與滑桿 -->
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="adjustValue('${item.id}', -1)" class="tap-target w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-slate-600 dark:text-slate-300 flex items-center justify-center transition-all active:scale-95 text-sm">−</button>
+          <input type="range" id="range-${item.id}" min="0" max="${item.max}" value="${item.defaultVal}" 
+                 class="flex-1 h-2 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer"
+                 oninput="updateValue('${item.id}', this.value)">
+          <button type="button" onclick="adjustValue('${item.id}', 1)" class="tap-target w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-slate-600 dark:text-slate-300 flex items-center justify-center transition-all active:scale-95 text-sm">+</button>
+        </div>
+
+        <!-- 快速捷徑標籤 (0分, 半分, 滿分) -->
+        <div class="flex justify-end gap-1.5 mt-2">
+          <button type="button" onclick="setValue('${item.id}', 0)" class="text-[10px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700">0分</button>
+          <button type="button" onclick="setValue('${item.id}', Math.round(${item.max} / 2))" class="text-[10px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700">一半</button>
+          <button type="button" onclick="setValue('${item.id}', ${item.max})" class="text-[10px] px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-bold hover:bg-emerald-100">滿分</button>
+        </div>
+      </div>
+    `).join('');
+
+    // 心情評分
+    const moodButtons = document.querySelectorAll('.mood-btn');
+    const moodInput = document.getElementById('input-mood');
+
+    function setMood(score) {
+      moodInput.value = score;
+      moodButtons.forEach(btn => {
+        const btnScore = btn.getAttribute('data-score');
+        if (btnScore === String(score)) {
+          btn.classList.add('border-amber-500', 'bg-amber-50', 'dark:bg-amber-950/50', 'text-amber-700', 'dark:text-amber-300', 'shadow-sm', 'scale-105');
+          btn.classList.remove('border-slate-200', 'dark:border-slate-800');
+        } else {
+          btn.classList.remove('border-amber-500', 'bg-amber-50', 'dark:bg-amber-950/50', 'text-amber-700', 'dark:text-amber-300', 'shadow-sm', 'scale-105');
+          btn.classList.add('border-slate-200', 'dark:border-slate-800');
+        }
+      });
+      calculateAndRender();
+    }
+
+    moodButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setMood(btn.getAttribute('data-score'));
+      });
+    });
+
+    setMood(5);
+
+    function updateValue(id, val) {
+      document.getElementById(`val-display-${id}`).innerText = val;
+      calculateAndRender();
+    }
+
+    function setValue(id, val) {
+      const range = document.getElementById(`range-${id}`);
+      range.value = val;
+      updateValue(id, val);
+    }
+
+    function adjustValue(id, delta) {
+      const range = document.getElementById(`range-${id}`);
+      let current = parseInt(range.value, 10);
+      let max = parseInt(range.max, 10);
+      let next = Math.max(0, Math.min(max, current + delta));
+      range.value = next;
+      updateValue(id, next);
+    }
+
+    // 計算總分與生成文字
+    function calculateAndRender() {
+      let habitsTotal = 0;
+      let textLines = [];
+
+      ITEMS_CONFIG.forEach(item => {
+        const val = parseInt(document.getElementById(`range-${item.id}`).value, 10);
+        habitsTotal += val;
+        textLines.push(`${item.icon} ${item.name}：${val} / ${item.max}分`);
+      });
+
+      const moodScore = parseInt(moodInput.value, 10);
+      const maxPossible = 100; // 8大自律項目滿分剛好 100 分
+      const percentage = habitsTotal; // 因為滿分是 100，所以分數直接就是百分比！
+
+      // 更新介面
+      document.getElementById('badge-total').innerText = habitsTotal;
+      document.getElementById('final-total').innerText = habitsTotal;
+      document.getElementById('percentage').innerText = `${percentage}%`;
+      document.getElementById('progress-bar').style.width = `${percentage}%`;
+
+      // 評價等級
+      const gradeBadge = document.getElementById('grade-badge');
+      if (percentage >= 90) {
+        gradeBadge.innerHTML = '🔥 超越極限・完美自律';
+        gradeBadge.className = 'inline-block px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-xl text-xs font-bold';
+      } else if (percentage >= 75) {
+        gradeBadge.innerHTML = '💪 表現極佳・持續突破';
+        gradeBadge.className = 'inline-block px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-xl text-xs font-bold';
+      } else if (percentage >= 60) {
+        gradeBadge.innerHTML = '🌱 穩步養成・明天更棒';
+        gradeBadge.className = 'inline-block px-3 py-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded-xl text-xs font-bold';
+      } else {
+        gradeBadge.innerHTML = '⚡ 重新調整・教練陪你';
+        gradeBadge.className = 'inline-block px-3 py-1 bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded-xl text-xs font-bold';
+      }
+
+      // 構建回報文字
+      const dateVal = dateInput.value || '未填寫';
+      const nameVal = document.getElementById('input-name').value.trim();
+      const noteVal = document.getElementById('input-note').value.trim();
+
+      let output = `【Fit21 每日健康蛻變打卡表】\n`;
+      output += `📅 日期：${dateVal}\n`;
+      if (nameVal) output += `👤 學員：${nameVal}\n`;
+      output += `──────────────────\n`;
+      output += textLines.join('\n') + '\n';
+      output += `──────────────────\n`;
+      output += `🏆 自律總分：${habitsTotal} / 100 分（達成率 ${percentage}%）\n`;
+      output += `🥳 心情分數：${moodScore} / 5分（${moodNames[moodScore] || ''}）\n`;
+      if (noteVal) {
+        output += `──────────────────\n`;
+        output += `💬 今日備註：${noteVal}\n`;
+      }
+      output += `💪 Fit21 21天挑戰，堅持成就更好的自己！`;
+
+      document.getElementById('preview-text').innerText = output;
+      return output;
+    }
+
+    // 監聽基本輸入
+    dateInput.addEventListener('change', calculateAndRender);
+    document.getElementById('input-name').addEventListener('input', calculateAndRender);
+    document.getElementById('input-note').addEventListener('input', calculateAndRender);
+
+    // 複製功能
+    function copyToClipboard() {
+      const text = calculateAndRender();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showToast).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast();
+      } catch (err) {
+        alert('複製失敗，請手動選取預覽文字進行複製！');
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+      }, 2500);
+    }
+
+    document.getElementById('btn-copy').addEventListener('click', copyToClipboard);
+    document.getElementById('btn-quick-copy').addEventListener('click', copyToClipboard);
+
+    // 重設按鈕
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if (confirm('確定要將所有分數重設為滿分 100 分嗎？')) {
+        ITEMS_CONFIG.forEach(item => setValue(item.id, item.max));
+        setMood(5);
+        document.getElementById('input-note').value = '';
+        calculateAndRender();
+      }
+    });
+
+    // 初始渲染
+    calculateAndRender();
+  </script>
+</body>
+</html>
